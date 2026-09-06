@@ -28,7 +28,7 @@ audio de 3s). Todo el entrenamiento corrió en el cluster Khipu vía Slurm.
 └── resultados/       CSV de cada sistema (metricas por epoca, finales, dataset usado)
 ```
 
-## Código fuente en `src/`
+## Archivos en `src/`
 
 | Archivo | Qué hace |
 |---|---|
@@ -48,6 +48,8 @@ audio de 3s). Todo el entrenamiento corrió en el cluster Khipu vía Slurm.
 | `CMLC_ablation_khipu.sh` | Job Slurm: entrena CMLC sobre Mel simple, para comparar contra MS-PCEN |
 | `precompute_full_khipu.sh` | Job Slurm: precómputo del dataset completo (42 especies, 62,191 clips) |
 | `CMLC_full_khipu.sh` | Job Slurm: entrena CMLC sobre el dataset completo, para las predicciones finales de test |
+
+Los 19 archivos se usan activamente; no hay código muerto en `src/`.
 
 ## Configuración del entorno (una vez, en el nodo de acceso de Khipu)
 
@@ -92,18 +94,15 @@ sbatch predict_test_khipu.sh nddr
 ./submit_chain.sh BR_khipu.sh br
 ```
 
-Ablación
+Ablación y entrega final (42 especies) — ver secciones correspondientes más
+abajo para el detalle de resultados.
 
 ```bash
 # Ablacion: MS-PCEN vs Mel-spectrogram simple
 sbatch precompute_ablation_khipu.sh
 sbatch CMLC_ablation_khipu.sh
 sbatch compute_paper_metrics_khipu.sh cmlc_nopcen cmlc features_cache_nopcen
-```
 
-Entrenamiento con 42 especies y predicciones del test
-
-```bash
 # Dataset completo (42 especies) para la entrega final de test
 sbatch precompute_full_khipu.sh
 sbatch CMLC_full_khipu.sh
@@ -219,9 +218,35 @@ sería inviable (requeriría 210 redes independientes en vez de 25).
 
 ## Ablación: MS-PCEN vs. Mel-spectrogram simple
 
-*(Pendiente de completar — ver `CMLC_ablation_khipu.sh`. Al terminar, agregar
-aquí la comparación de `resultados/cmlc/results_final.csv` vs.
-`resultados/cmlc_nopcen/results_final.csv`.)*
+Se entrenó CMLC dos veces bajo condiciones idénticas —mismo split, mismas 5
+especies, mismos 10,000 clips, mismos hiperparámetros— cambiando únicamente
+la representación de entrada de audio.
+
+| Métrica | MS-PCEN | Mel simple | Diferencia |
+|---|---|---|---|
+| F1 macro | 0.9460 | 0.9397 | +0.0063 |
+| Accuracy | 0.9654 | 0.9635 | +0.0019 |
+| Exact Match | 0.8475 | 0.8376 | +0.0099 |
+
+| Especie | MS-PCEN | Mel simple | Diferencia |
+|---|---|---|---|
+| BOABIS | 0.9193 | 0.9214 | -0.0021 |
+| BOAFAB | 0.9752 | 0.9710 | +0.0041 |
+| DENMIN | 0.9281 | 0.9143 | +0.0138 |
+| LEPPOD | 0.9544 | 0.9352 | +0.0192 |
+| SPHSUR | 0.9529 | 0.9564 | -0.0035 |
+
+**Análisis:** MS-PCEN mejora las tres métricas globales, pero por un margen
+modesto (menos de 1 punto porcentual en todos los casos) — una diferencia
+mucho más pequeña que la que sugeriría la motivación metodológica del paper
+original. A nivel de especie, la ventaja tampoco es uniforme: en BOABIS y
+SPHSUR, Mel simple obtuvo un F1 marginalmente mejor. El beneficio de MS-PCEN
+se concentra en DENMIN y LEPPOD. Una explicación plausible es que las
+grabaciones de campo de anuros en la Amazonía —al menos las de las 5 especies
+más frecuentes del dataset— tengan condiciones de ruido de fondo más estables
+que el entorno marino para el que el paper reporta el hallazgo original,
+reduciendo el margen de mejora que aporta la normalización de energía por
+canal de PCEN.
 
 ## Entrega final: CMLC con las 42 especies completas
 

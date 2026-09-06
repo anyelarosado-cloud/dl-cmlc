@@ -59,7 +59,7 @@ significativamente mas computo (5x y 2.1x el tiempo de CMLC/HPS,
 respectivamente) para su mejora de desempeño -- de ahi que CMLC (el mas
 eficiente) sea el elegido para escalar a las 42 especies completas.
 
-## Decisiones metodologicas (para el informe)
+## Decisiones metodologicas
 
 **CMLC/BR/HPS/NDDR sobre K=5 clases, max 10,000 muestras** (`--top_n_classes 5
 --max_samples 10000`): iguala la escala exacta del paper original (5 clases),

@@ -1,23 +1,9 @@
-# CMLC/BR/HPS/NDDR para Khipu — README
+# CMLC/BR/HPS/NDDR
 
 Implementacion de los 4 sistemas de clasificacion multi-etiqueta comparados en
 Olcay et al. (2026), *"How to analyse overlapping sounds in the marine
 environment using supervised multi-label classification"* (npj Acoustics),
 adaptados al dataset de anuros de la Amazonia (42 especies, 62,191 clips).
-
-## Estructura de carpetas
-
-```
-/home/anyela.rosado/dl/lab01/
-├── dataset/                       <- train/, test/, train.csv
-├── cmlc/                          <- SOLO codigo (.py, .sh) + logs/
-├── features_cache/                <- cache de MS-PCEN (precompute_khipu.sh)
-├── checkpoints/{cmlc,br,hps,nddr}/
-└── resultados/{cmlc,br,hps,nddr}/ <- results_epochs.csv, results_final.csv, used_dataset.csv
-```
-
-`cmlc/` es la unica carpeta que se reemplaza al actualizar codigo; el resto
-(cache, checkpoints, resultados) vive un nivel arriba y nunca se borra.
 
 ## Archivos
 
@@ -32,7 +18,7 @@ adaptados al dataset de anuros de la Amazonia (42 especies, 62,191 clips).
 | `CMLC_khipu.sh` / `BR_khipu.sh` / `HPS_khipu.sh` / `NDDR_khipu.sh` | Jobs Slurm de entrenamiento |
 | `submit_chain.sh` | Reenvia un job automaticamente si no termina en 8h |
 
-## Configuracion del entorno (una vez, en el nodo de acceso)
+## Configuracion del entorno (una vez, en el nodo de acceso de KHIPU)
 
 ```bash
 module purge
@@ -50,12 +36,6 @@ pip install numpy pandas librosa scikit-learn
 
 Verificar: `python3 -c "import torch; print(torch.__version__)"` debe mostrar
 algo como `2.5.1+cu121` (no `+cpu`).
-
-## GPU
-
-Los 4 `.sh` usan `--partition=gpu --nodelist=ag001 --gres=gpu:a100_3g.20gb:1`
-(A100 MIG slice de 20GB). Para ver que nodos/GPUs hay disponibles:
-`sinfo -N -o "%N %P %G"`.
 
 ## Orden de ejecucion
 

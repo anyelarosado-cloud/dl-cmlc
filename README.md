@@ -28,7 +28,7 @@ audio de 3s). Todo el entrenamiento corrió en el cluster Khipu vía Slurm.
 └── resultados/       CSV de cada sistema (metricas por epoca, finales, dataset usado)
 ```
 
-## Archivos en `src/`
+## Código fuente en `src/`
 
 | Archivo | Qué hace |
 |---|---|
@@ -48,8 +48,6 @@ audio de 3s). Todo el entrenamiento corrió en el cluster Khipu vía Slurm.
 | `CMLC_ablation_khipu.sh` | Job Slurm: entrena CMLC sobre Mel simple, para comparar contra MS-PCEN |
 | `precompute_full_khipu.sh` | Job Slurm: precómputo del dataset completo (42 especies, 62,191 clips) |
 | `CMLC_full_khipu.sh` | Job Slurm: entrena CMLC sobre el dataset completo, para las predicciones finales de test |
-
-Los 19 archivos se usan activamente; no hay código muerto en `src/`.
 
 ## Configuración del entorno (una vez, en el nodo de acceso de Khipu)
 
@@ -94,15 +92,18 @@ sbatch predict_test_khipu.sh nddr
 ./submit_chain.sh BR_khipu.sh br
 ```
 
-Ablación y entrega final (42 especies) — ver secciones correspondientes más
-abajo para el detalle de resultados.
+Ablación
 
 ```bash
 # Ablacion: MS-PCEN vs Mel-spectrogram simple
 sbatch precompute_ablation_khipu.sh
 sbatch CMLC_ablation_khipu.sh
 sbatch compute_paper_metrics_khipu.sh cmlc_nopcen cmlc features_cache_nopcen
+```
 
+Entrenamiento con 42 especies y predicciones del test
+
+```bash
 # Dataset completo (42 especies) para la entrega final de test
 sbatch precompute_full_khipu.sh
 sbatch CMLC_full_khipu.sh

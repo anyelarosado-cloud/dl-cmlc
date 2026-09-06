@@ -28,7 +28,9 @@ audio de 3s). Todo el entrenamiento corrió en el cluster Khipu vía Slurm.
 └── resultados/       CSV de cada sistema (metricas por epoca, finales, dataset usado)
 ```
 
-## Archivos en `src/`
+## Código fuente
+
+Ubicados en `src/`
 
 | Archivo | Qué hace |
 |---|---|
@@ -49,8 +51,6 @@ audio de 3s). Todo el entrenamiento corrió en el cluster Khipu vía Slurm.
 | `precompute_full_khipu.sh` | Job Slurm: precómputo del dataset completo (42 especies, 62,191 clips) |
 | `CMLC_full_khipu.sh` | Job Slurm: entrena CMLC sobre el dataset completo, para las predicciones finales de test |
 
-Los 19 archivos se usan activamente; no hay código muerto en `src/`.
-
 ## Configuración del entorno (una vez, en el nodo de acceso de Khipu)
 
 ```bash
@@ -66,9 +66,6 @@ module load cuda/12.6
 pip install torch --index-url https://download.pytorch.org/whl/cu121
 pip install numpy pandas librosa scikit-learn
 ```
-
-Verificar: `python3 -c "import torch; print(torch.__version__)"` debe mostrar
-algo como `2.5.1+cu121` (no `+cpu`).
 
 ## Orden de ejecución
 
@@ -94,8 +91,7 @@ sbatch predict_test_khipu.sh nddr
 ./submit_chain.sh BR_khipu.sh br
 ```
 
-Ablación y entrega final (42 especies) — ver secciones correspondientes más
-abajo para el detalle de resultados.
+Ablación y predicción del test (42 especies) 
 
 ```bash
 # Ablacion: MS-PCEN vs Mel-spectrogram simple

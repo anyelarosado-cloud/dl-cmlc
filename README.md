@@ -89,17 +89,13 @@ sbatch predict_test_khipu.sh nddr
 
 # Si algun job no termina en 8h:
 ./submit_chain.sh BR_khipu.sh br
-```
 
-Ablación y predicción del test (42 especies) 
-
-```bash
 # Ablacion: MS-PCEN vs Mel-spectrogram simple
 sbatch precompute_ablation_khipu.sh
 sbatch CMLC_ablation_khipu.sh
 sbatch compute_paper_metrics_khipu.sh cmlc_nopcen cmlc features_cache_nopcen
 
-# Dataset completo (42 especies) para la entrega final de test
+# Entrenamiento con el dataset completo (42 especies) para predicción del test dataset
 sbatch precompute_full_khipu.sh
 sbatch CMLC_full_khipu.sh
 sbatch predict_test_khipu.sh cmlc_full cmlc features_cache_full
@@ -244,7 +240,7 @@ que el entorno marino para el que el paper reporta el hallazgo original,
 reduciendo el margen de mejora que aporta la normalización de energía por
 canal de PCEN.
 
-## Entrega final: CMLC con las 42 especies completas
+## Predicciones para el test dataset
 
 *(Pendiente de completar — ver `CMLC_full_khipu.sh` y
 `predict_test_khipu.sh cmlc_full cmlc features_cache_full`.)*
